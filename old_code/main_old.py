@@ -1,6 +1,6 @@
 # main.py
 
-from db import add_task, list_tasks
+from db import tasks, add_task, list_tasks
 
 def main():
     while True:
