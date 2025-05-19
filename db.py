@@ -31,3 +31,10 @@ def list_tasks():
         print("Tasks:")
         for i, (task_id, description) in enumerate(results, 1):
             print(f"{i}. {description}")
+def delete_task(task_to_delete):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM TASKS WHERE description = %s", (task_to_delete,))
+    conn.commit()
+    conn.close()
+    print(f"Task deleted: '{task_to_delete}'")
