@@ -1,8 +1,10 @@
 # db.py
+# This file handles all database operations for the Todo App
 
 import mysql.connector
 from mysql.connector import Error
 
+# Establish connection to the local MySQL database
 def get_connection():
     try:
         return mysql.connector.connect(
@@ -15,6 +17,7 @@ def get_connection():
         print(f"[ERROR] Could not connect to the database: {e}")
         return None
 
+# Add a task to the database
 def add_task(task):
     conn = get_connection()
     if conn:
@@ -28,6 +31,7 @@ def add_task(task):
         finally:
             conn.close()
 
+# List all tasks in the database
 def list_tasks():
     conn = get_connection()
     if conn:
@@ -46,6 +50,7 @@ def list_tasks():
         finally:
             conn.close()
 
+# Delete a task based on the user's input number (not DB ID)
 def delete_task_by_number(task_number):
     conn = get_connection()
     if conn:
@@ -53,11 +58,13 @@ def delete_task_by_number(task_number):
             cursor = conn.cursor()
             cursor.execute("SELECT id, description FROM tasks")
             results = cursor.fetchall()
+
+            # Check if task number is valid
             if 0 < task_number <= len(results):
                 task_id, task_desc = results[task_number - 1]
                 cursor.execute("DELETE FROM tasks WHERE id = %s", (task_id,))
                 conn.commit()
-                print(f'Task deleted: "{task_desc}"')
+                print(f'Task {task_number} deleted: "{task_desc}"')
             else:
                 print("Invalid task number.")
         except Error as e:
